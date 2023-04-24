@@ -40,7 +40,7 @@ router.post('/', async (req, res) => {
     const categoryData = await Category.create(req.body)
     res.status(200).json(categoryData)
   } catch(err){
-    res.status(500).json
+    res.status(500).json(err)
   }
 });
 
@@ -54,7 +54,7 @@ router.put('/:id', async (req, res) => {
     })
     res.status(200).json(categoryData)  //I want this to show updated object
   } catch(err){
-    res.status(500).json
+    res.status(500).json(err)
   }
 });
 
@@ -72,7 +72,7 @@ router.delete('/:id', async (req, res) => {
     }
     res.status(200).json(categoryData)
   } catch(err){
-    res.status(500).json
+    res.status(500).json(err)
   }
 });
 
