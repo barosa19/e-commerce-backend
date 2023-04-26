@@ -9,10 +9,10 @@ router.get("/", async (req, res) => {
   // be sure to include its associated Category and Tag data
   try {
     const productData = await Product.findAll({
-      include: [{ model: Category }, { model: Tag }],
+      include: [{ model: Category }, { model: Tag, through: ProductTag }],
     });
     res.status(200).json(productData);
-  } catch(err) {
+  } catch (err) {
     res.status(500).json(err);
   }
 });
@@ -29,21 +29,13 @@ router.get("/:id", async (req, res) => {
       res.status(404).json({ message: "No product found with that id!" });
     }
     res.status(200).json(productData);
-  } catch(err) {
+  } catch (err) {
     res.status(500).json(err);
   }
 });
 
 // create new product
 router.post("/", (req, res) => {
-  /* req.body should look like this...
-    {
-      product_name: "Basketball",
-      price: 200.00,
-      stock: 3,
-      tagIds: [1, 2, 3, 4]
-    }
-  */
   Product.create(req.body)
     .then((product) => {
       // if there's product tags, we need to create pairings to bulk create in the ProductTag model
@@ -59,7 +51,9 @@ router.post("/", (req, res) => {
       // if no product tags, just respond
       res.status(200).json(product);
     })
-    .then((productTagIds) => res.status(200).json(productTagIds))
+    .then(() =>
+      res.status(200).json({ message: "Product successfully CREATED" })
+    )
     .catch((err) => {
       console.log(err);
       res.status(400).json(err);
@@ -74,7 +68,7 @@ router.put("/:id", (req, res) => {
       id: req.params.id,
     },
   })
-    .then((product) => {
+    .then(() => {
       // find all associated tags from ProductTag
       return ProductTag.findAll({ where: { product_id: req.params.id } });
     })
@@ -101,7 +95,9 @@ router.put("/:id", (req, res) => {
         ProductTag.bulkCreate(newProductTags),
       ]);
     })
-    .then((updatedProductTags) => res.json(updatedProductTags))
+    .then((updatedProductTags) =>
+      res.json({ message: "Product successfully UPDATED", updatedProductTags })
+    )
     .catch((err) => {
       // console.log(err);
       res.status(400).json(err);
@@ -120,8 +116,8 @@ router.delete("/:id", async (req, res) => {
       res.status(404).json("No product found with that id!");
       return;
     }
-    res.status(200).json(productData);
-  } catch(err) {
+    res.status(200).json("Product successfully DELETED");
+  } catch (err) {
     res.status(500).json(err);
   }
 });

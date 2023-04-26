@@ -46,12 +46,15 @@ router.post("/", async (req, res) => {
 router.put("/:id", async (req, res) => {
   // update a tag's name by its `id` value
   try {
-    const tagData = await Tag.update(req.body, {
+    await Tag.update(req.body, {
       where: {
         id: req.params.id,
       },
     });
-    res.status(200).json(tagData)
+    const updatedTagData = await Tag.findByPk(req.params.id, {
+      include: [{ model: Product }],
+    })
+    res.status(200).json({message: 'Category successfully UPDATED', updatedTagData});
   } catch (err) {
     res.status(500).json(err);
   }
@@ -62,10 +65,10 @@ router.delete("/:id", async (req, res) => {
   try {
     const tagData = await Tag.destroy({
       where: {
-        id: req.params.id
-      }
-    })
-    res.status(200).json(tagData)
+        id: req.params.id,
+      },
+    });
+    res.status(200).json("Product successfully DELETED");
   } catch (err) {
     res.status(500).json(err);
   }
