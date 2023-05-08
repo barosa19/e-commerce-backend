@@ -13,7 +13,7 @@ This application is the back-end for an e-commerce site. The server consist of 3
 
 ## Installation
 
-To use this application you will need node.js, inquirer version 8.2.4, and jest. To run the application you will need to do an npm i, SOURCE schema.sql, npm run seed, and npm start. Then use insomnia to fetch your routes.  
+To use this application you will need node.js, dotenv, express, mysql12, and sequelize. To run the application you will need to do an npm i, SOURCE schema.sql, npm run seed, and npm start. Then use insomnia to fetch your routes.  
 
 ## Usage
 
